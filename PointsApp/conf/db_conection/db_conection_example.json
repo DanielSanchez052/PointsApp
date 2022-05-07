@@ -1,0 +1,18 @@
+{
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "test",
+        "HOST": "test",
+        "PORT": "5432",
+        "USER": "test",
+        "PASSWORD": "test"
+    },
+    "products": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "test",
+        "HOST": "test",
+        "PORT": "5432",
+        "USER": "test",
+        "PASSWORD": "test"
+    }
+}

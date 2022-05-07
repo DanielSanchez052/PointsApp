@@ -1,0 +1,47 @@
+version: '3.9' 
+services:
+  redis:
+    image: "redis:alpine"
+    networks: 
+      - web_network
+  web:
+    container_name: web
+    restart: always
+    env_file: .env
+    build: .
+    volumes:
+      - .:/code
+    ports:
+      - "4000:4000"
+    networks:
+      - web_network
+    depends_on:
+      - redis
+    
+  celery:
+    build: .
+    command: celery -A PointsApp worker --loglevel=info
+    volumes:
+      - .:/code
+    networks:
+      - web_network
+    depends_on:
+      - web 
+      - redis
+    
+  nginx:
+    container_name: nginx
+    restart: always
+    image: "nginx:latest"
+    ports: 
+      - "85:85"
+    volumes: 
+      - ./nginx:/etc/nginx/conf.d 
+    networks: 
+      - web_network
+    depends_on: 
+      - web
+networks:
+  web_network:
+    driver: bridge
+
