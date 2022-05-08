@@ -1,6 +1,7 @@
-import uuid
+from simple_history.models import HistoricalRecords
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+
 
 class UserManager(BaseUserManager):
     def _create_user(self, username, password, is_staff, is_superuser, **extra_fields):
@@ -26,6 +27,7 @@ class Auth(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default = False)
     created_at = models.DateField('created at',auto_now_add=True,auto_now=False)
     modified_at = models.DateField('modified at',auto_now_add=False ,auto_now=True)
+    historical = HistoricalRecords()
     objects = UserManager()
 
     class Meta:

@@ -3,7 +3,7 @@ from PointsApp.utils import extract_apps
 
 class UserRouter:
     router_app_labels = {*(extract_apps(settings.LOCAL_APPS, 'users')),'auth', 'contenttypes', 'sessions', 'admin', 'token_blacklist'}
-    database = 'default' 
+    database = 'users' 
 
     def db_for_read(self, model, **hints):
         if model._meta.app_label in self.router_app_labels:

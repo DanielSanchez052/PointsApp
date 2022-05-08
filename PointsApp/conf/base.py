@@ -45,6 +45,10 @@ LOCAL_APPS = [
     'apps.users.user',
     'apps.users.points',
     'apps.users.notifications',
+    'apps.products.customer',
+    'apps.products.digital',
+    'apps.products.order',
+    'apps.products.product',
 ]
 
 THIRD_APPS = [
@@ -53,6 +57,7 @@ THIRD_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'simple_history',
 ]
 
 INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
@@ -66,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'PointsApp.urls'

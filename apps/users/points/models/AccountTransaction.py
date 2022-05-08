@@ -8,7 +8,8 @@ class PointManager(models.Manager):
     pass
 
 class AccountTransaction(BaseModel):
-    status = models.ForeignKey(TransactionStatus, on_delete=models.SET_DEFAULT, default="d9294e27-e62c-4d33-b609-d09e4cb17fc7")
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False )
+    status = models.ForeignKey(TransactionStatus, on_delete=models.SET_DEFAULT, default=1)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     value = models.PositiveIntegerField(blank=True, null=True)
     available_value = models.PositiveIntegerField(blank=True, null=True)

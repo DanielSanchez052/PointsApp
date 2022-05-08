@@ -8,10 +8,11 @@ from .IdentificationType import IdentificationType
 
 
 class Profile(BaseModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False )
     auth = models.ForeignKey(Auth, on_delete=models.CASCADE)
     city = models.ForeignKey(City, on_delete=models.DO_NOTHING)
     identification_type = models.ForeignKey(IdentificationType, on_delete=models.SET_DEFAULT, default=1)
-    status = models.ForeignKey(ProfileStatus, on_delete=models.DO_NOTHING)
+    status = models.ForeignKey(ProfileStatus, on_delete=models.SET_DEFAULT, default=1)
     identification = models.CharField('identification', max_length=150, unique=True, blank=True)
     name = models.CharField('name', max_length=150, unique=True, blank=True)
     last_name = models.CharField('last name',max_length=150, unique=True, blank=True)

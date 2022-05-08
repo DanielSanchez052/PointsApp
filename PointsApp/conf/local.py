@@ -11,4 +11,6 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:85","http://127.0.0.1"]
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 DATABASES = read_json('db_conection_dev.json',os.path.join(BASE_DIR, 'conf/db_conection/'))
 
-DATABASE_ROUTERS = ['PointsApp.conf.database_router.user_router.UserRouter']
+DATABASE_ROUTERS = [
+    'PointsApp.conf.database_router.user_router.UserRouter',
+    'PointsApp.conf.database_router.product_router.ProductRouter']
