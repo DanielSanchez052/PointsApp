@@ -8,3 +8,8 @@ admin.site.register(Department)
 admin.site.register(IdentificationType)
 admin.site.register(Profile)
 admin.site.register(ProfileStatus)
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    max_num = 1

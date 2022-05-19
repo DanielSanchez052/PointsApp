@@ -1,8 +1,9 @@
+import uuid
 from datetime import datetime, timedelta
 from django.db import models 
 from apps.core.models import BaseModel
 from .Account import Account
-from .TransactionStatus import *
+from .TransactionStatus import TransactionStatus
 
 class PointManager(models.Manager):
     pass

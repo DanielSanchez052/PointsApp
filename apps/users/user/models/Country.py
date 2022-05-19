@@ -9,5 +9,5 @@ class Country(models.Model):
         return f'{self.name}|{self.is_active}'
 
     class Meta:
-        verbose_name='Country'
-        verbose_name_plural='Country'
+        verbose_name='User Country'
+        verbose_name_plural='User Country'

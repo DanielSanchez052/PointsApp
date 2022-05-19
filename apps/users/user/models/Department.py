@@ -11,5 +11,5 @@ class Department(models.Model):
         return f'{self.name}|{self.is_active}'
 
     class Meta:
-        verbose_name='Department'
-        verbose_name_plural='Departments'
+        verbose_name='User Department'
+        verbose_name_plural='User Departments'

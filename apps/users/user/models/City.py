@@ -1,4 +1,3 @@
-import uuid
 from django.db import models
 from .Department import Department 
 
@@ -12,5 +11,5 @@ class City(models.Model):
         return f'{self.name}|{self.postal_code}|{self.is_active}'
 
     class Meta:
-        verbose_name='Product City'
-        verbose_name_plural='Product Cities'
+        verbose_name='User City'
+        verbose_name_plural='User Cities'

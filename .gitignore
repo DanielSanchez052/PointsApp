@@ -7,7 +7,7 @@ db.sqlite3
 media
 db_conection_production.json
 db_conection_dev.json
-
+migrations/
 # Backup files # 
 *.bak 
 

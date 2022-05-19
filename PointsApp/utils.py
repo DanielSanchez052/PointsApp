@@ -5,7 +5,7 @@ def extract_apps(apps, type):
         for app in apps:
             app_splitted = app.split('.')
             if len(app_splitted) >= 2 and  app_splitted[1] == type:
-                extracted_apps.add(app)
+                extracted_apps.add(app_splitted[-1])
         return extracted_apps
 
 

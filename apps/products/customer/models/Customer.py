@@ -23,5 +23,5 @@ class Customer(BaseModel):
         return f'{self.identification}|{self.name} {self.last_name}'
 
     class Meta:
-        verbose_name='Profile'
-        verbose_name_plural='Profiles'
+        verbose_name='Customer'
+        verbose_name_plural='Customers'

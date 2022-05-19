@@ -22,7 +22,12 @@ class UserManager(BaseUserManager):
         return self._create_user(username, password, True, True, **extra_fields)
 
 class Auth(AbstractBaseUser, PermissionsMixin):
+    CHOICE_STATUS = (
+        (1,'INCOMPLETE'),
+        (2,'COMPLETE'),
+    )
     username = models.CharField(max_length = 255, unique = True)
+    status = models.SmallIntegerField('status authentication',choices=CHOICE_STATUS, default=1)
     is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)
     created_at = models.DateField('created at',auto_now_add=True,auto_now=False)
@@ -31,11 +36,22 @@ class Auth(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     class Meta:
-        verbose_name = 'Auth'
-        verbose_name_plural = 'Auth'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     def __str__(self):
         return f'{self.username}|{self.is_active}'
+
+
+class UserSession(models.Model):
+    # Model to store the list of logged in users
+    user = models.ForeignKey(Auth, on_delete=models.CASCADE, related_name='logged_in_user')
+     # Session keys are 32 characters long
+    session_key = models.CharField(max_length=32, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
