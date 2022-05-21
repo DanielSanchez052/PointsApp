@@ -53,15 +53,16 @@ LOCAL_APPS = [
 THIRD_APPS = [
     'rest_framework',
     'corsheaders',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'simple_history',
+    'debug_toolbar',
 ]
 
 INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', #WHITENOISE MIDDLEWARE
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -126,7 +127,6 @@ USE_TZ = True
 #REST Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
@@ -139,9 +139,6 @@ REST_FRAMEWORK = {
     #     'rest_framework.renderers.JSONRenderer',
     # ),
 }
-
-LIMIT_SESSIONS= True
-LIMIT_NUMBER_SESSIONS= 1
 
 #CORS Config
 CORS_ALLOWED_ORIGINS = [

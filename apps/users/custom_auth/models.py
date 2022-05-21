@@ -1,7 +1,8 @@
-from simple_history.models import HistoricalRecords
+from django.contrib.sessions.models import Session
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
+from simple_history.models import HistoricalRecords
 
 class UserManager(BaseUserManager):
     def _create_user(self, username, password, is_staff, is_superuser, **extra_fields):
@@ -51,6 +52,12 @@ class UserSession(models.Model):
     user = models.ForeignKey(Auth, on_delete=models.CASCADE, related_name='logged_in_user')
      # Session keys are 32 characters long
     session_key = models.CharField(max_length=32, null=True, blank=True)
+    # session_key = models.ForeignKey(Session, on_delete= models.CASCADE, related_name='user_session')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'session_key'], name="%(app_label)s_%(class)s_unique")
+        ]
 
     def __str__(self):
         return self.user.username
