@@ -1,4 +1,5 @@
-from django.contrib.auth import authenticate
+from xml.dom import ValidationErr
+from django.contrib.auth import authenticate, user_login_failed
 
 from rest_framework import serializers
 
@@ -32,15 +33,14 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         user = authenticate(request=self.context.get('request'),
-                                username=attrs.get('username'), password=attrs.get('password'))
+                            username=attrs.get('username'), password=attrs.get('password'))
         if not user:
             msg = 'Access denied: wrong username or password.'
             raise serializers.ValidationError(msg, code='authorization')
-
         if not default_user_authentication_rule(user):
             raise serializers.ValidationError('User is disabled or not exists', code='authorization')
-
         return {'user': user}
+    
 
 
 class LoginUserSerializer(serializers.ModelSerializer):

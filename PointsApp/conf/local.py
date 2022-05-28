@@ -6,7 +6,9 @@ DEBUG = os.environ.get('DEBUG', default=True)
 ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1', os.environ.get('SERVER', default='127.0.0.1')]
 
 LIMIT_SESSIONS= True
-LIMIT_NUMBER_SESSIONS= 1
+LIMIT_NUMBER_SESSIONS= 2
+USER_LOCKED_MINUTES=15
+USER_LOCKED_ATTEMPTS=4
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:85","http://127.0.0.1:85"]
 # Database

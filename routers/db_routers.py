@@ -27,7 +27,7 @@ class ProductRouter:
         return None
 
 class UserRouter:
-    route_app_labels = { *extract_apps(settings.LOCAL_APPS, 'users'),'auth', 'contenttypes', 'sessions', 'admin', 'token_blacklist'}
+    route_app_labels = { *extract_apps(settings.LOCAL_APPS, 'users'),'auth', 'contenttypes', 'sessions', 'admin'}
 
     def db_for_read(self, model, **hints):
         """

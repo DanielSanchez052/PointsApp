@@ -1,6 +1,6 @@
 
 
-def get_client_ip(request):
+def get_request_ip(request):
     """
         Get IP from request user 
     """

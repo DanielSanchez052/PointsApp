@@ -1,4 +1,7 @@
 # Django #
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
 *.log
 *.pot
 *.pyc
@@ -7,7 +10,6 @@ db.sqlite3
 media
 db_conection_production.json
 db_conection_dev.json
-migrations/
 
 # Backup files # 
 *.bak 
@@ -133,6 +135,7 @@ GitHub.sublime-settings
 
 # Visual Studio Code # 
 .vs/*
+.vs/
 .vscode/* 
 !.vscode/settings.json 
 !.vscode/tasks.json 
