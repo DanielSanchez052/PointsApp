@@ -28,10 +28,21 @@ class UserManager(BaseUserManager):
         return self._create_user(username, password, True, True, **extra_fields)
 
 class Auth(AbstractBaseUser, PermissionsMixin):
+    """
+    store user information for authenticatation user
+      * username
+      * password
+      * email
+      * is_active
+      * is_staff
+      * status
+    """
+
     CHOICE_STATUS = (
         (1,'INCOMPLETE'),
         (2,'COMPLETE'),
     )
+    email = models.CharField('email', max_length=250, unique=True, blank=True)
     username = models.CharField(max_length = 255, unique = True)
     status = models.SmallIntegerField('status authentication',choices=CHOICE_STATUS, default=1)
     is_active = models.BooleanField(default = True)
@@ -47,7 +58,7 @@ class Auth(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'Users'
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return f'{self.username}|{self.is_active}'
@@ -58,9 +69,14 @@ class UserSessionManager(models.Manager):
         user_logins = self.filter(user=user).values('session_key')
         #sessions opened
         return list(Session.objects.filter(session_key__in=user_logins).order_by('expire_date').values_list('session_key', flat=True))
-
         
 class UserSession(models.Model):
+    """
+    store user session information
+      * user
+      * session_key
+    """
+
     # Model to store the list of logged in users
     user = models.ForeignKey(Auth, on_delete=models.CASCADE, related_name='logged_in_user')
      # Session keys are 32 characters long
@@ -97,6 +113,13 @@ class IpLockedManager(models.Manager):
         return ip_locked if ip_locked else f'Ip address {ip} already is locked'
 
 class IpLocked(models.Model):
+    """
+    store locked IPs¨
+      * id
+      * ip
+      * created_at 
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False )
     ip = models.CharField('Ip locked', max_length=45)
     #unlocked_date = models.DateField('locked_date',auto_now_add=False,auto_now=False, default=timezone.now() + timedelta(minutes=settings.USER_LOCKED_MINUTES|15))

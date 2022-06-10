@@ -9,26 +9,22 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+from email.policy import default
 import os
 from pathlib import Path
-import environ
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env()
-
-environ.Env.read_env(os.path.join(BASE_DIR,'.env'))
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', default='S#perS3crEt_1122')
+SECRET_KEY = config('SECRET_KEY')
 
 # Application definition
-
 BASE_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +40,7 @@ LOCAL_APPS = [
     'apps.users.user',
     'apps.users.points',
     'apps.users.notifications',
+    'apps.users.serviceUser',
     'apps.products.customer',
     'apps.products.digital',
     'apps.products.order',
@@ -55,13 +52,15 @@ THIRD_APPS = [
     'corsheaders',
     'drf_yasg',
     'simple_history',
+    'django_celery_beat',
     'debug_toolbar',
+    'django_rest_passwordreset',
 ]
 
 INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",##Debug Tools Config
 
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', #WHITENOISE MIDDLEWARE
@@ -80,7 +79,7 @@ ROOT_URLCONF = 'PointsApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -152,9 +151,9 @@ CORS_ALLOWED_ORIGINS = [
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = 'static/'
 STATICFILES_DIRS = ['static']
-STATIC_ROOT= os.path.join(BASE_DIR, os.environ.get('STATIC_ROOT', default='static_root'))
-MEDIA_URL = os.environ.get('MEDIA_URL', default='/media/')
-MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get('MEDIA_ROOT', default='media_root'))
+STATIC_ROOT= os.path.join(BASE_DIR, config('STATIC_ROOT',default='static_root'))
+MEDIA_URL = config('MEDIA_URL', default='/media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, config('MEDIA_ROOT', default='media_root'))
 
 
 # Default primary key field type
@@ -176,9 +175,9 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 #send Email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD",default="")
+EMAIL_HOST = config("EMAIL_HOST",default='smtp.gmail.com' )
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_NOTIFY = []
 

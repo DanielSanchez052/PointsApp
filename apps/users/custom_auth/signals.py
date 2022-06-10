@@ -1,33 +1,21 @@
-from re import T
 from django.contrib.auth import user_logged_in, user_login_failed
 from django.db.models.signals import post_delete
 from django.contrib.sessions.models import Session
 from django.dispatch import receiver
 from django.conf import settings
+from django.template.loader import render_to_string
+
+from django_rest_passwordreset.signals import reset_password_token_created
 
 from .models import UserSession, Auth, IpLocked
 from apps.core.utils import get_request_ip
+from apps.core.tasks import send_async_email
+from .tasks import valid_user_login
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
-    try:
-        number_sessions = settings.LIMIT_NUMBER_SESSIONS if settings.LIMIT_NUMBER_SESSIONS and settings.LIMIT_NUMBER_SESSIONS != 0 else 1 
-        limit_sessions = settings.LIMIT_SESSIONS if settings.LIMIT_SESSIONS else True
-
-        if limit_sessions:
-            open_session = UserSession.objects.get_sessions_by_user(kwargs.get('user'))
-            
-            if not len(open_session) < number_sessions:  
-                close_sessions = open_session[:(len(open_session) - number_sessions)+1]
-                Session.objects.filter(pk__in=close_sessions).delete()
-
-    except Exception as e:
-        print(e.args[0])
-        pass
-
-    finally:
-        #insert register for sessions control
-        UserSession.objects.get_or_create(user=kwargs.get('user'), session_key=request.session.session_key)
+    #print(type(kwargs.get('user').id))
+    valid_user_login.delay(kwargs.get('user').id, request.session.session_key)
 
 @receiver(user_login_failed)
 def on_login_fail(sender, request,**kwags):
@@ -51,4 +39,36 @@ def on_login_fail(sender, request,**kwags):
 def on_user_logged_out(sender, instance,**kwargs):
     UserSession.objects.filter(session_key=instance.session_key).delete()
 
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    """
+    Handles password reset tokens
+    When a token is created, an e-mail needs to be sent to the user
+    :param sender: View Class that sent the signal
+    :param instance: View Instance that sent the signal
+    :param reset_password_token: Token Model Object
+    :param args:
+    :param kwargs:
+    :return:
+    """
 
+    # end an e-mail to the users
+    context = {
+        'current_user': reset_password_token.user,
+        'username': reset_password_token.user.username,
+        'email': reset_password_token.user.email,
+        'reset_password_url': "{}?token={}".format(
+            settings.PASSWORD_RESET_FORM_URL,
+            reset_password_token.key)
+    }
+
+    # render email text
+    email_html_message = render_to_string('email/user_reset_password.html', context)
+    email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+
+    send_async_email.delay(
+        "Password Reset for {title}".format(title="Some website title"),
+        [reset_password_token.user.email],
+        email_plaintext_message,
+        email_html_message
+    )

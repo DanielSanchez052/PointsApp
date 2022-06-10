@@ -2,9 +2,13 @@ from django.contrib.auth import login, logout
 from django.conf import settings
 
 from rest_framework.response import Response
-from rest_framework import status, views, permissions
+from rest_framework import status, views, permissions, generics
+from rest_framework.generics import UpdateAPIView
 
-from .serializers.authentication_serializer import LoginSerializer, LoginUserSerializer
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+from .serializers.authentication_serializer import LoginSerializer, LoginUserSerializer, ChangePasswordSerializer
 from .authentication import CsrfExemptSessionAuthentication
 from apps.core.utils import get_request_ip
 from ..models import IpLocked
@@ -14,6 +18,7 @@ class LoginView(views.APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
     permission_classes = (permissions.AllowAny,)
 
+    @swagger_auto_schema(tags=['authentication'])
     def post(self, request, format=None):
         ip_request = get_request_ip(request)
 
@@ -24,18 +29,53 @@ class LoginView(views.APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         
-        if user.attempts > 0:
+        if user.attempts > settings.LIMIT_NUMBER_SESSIONS:
             user.attempts = 0
             user.save()
 
         login(request, user)
         return Response(LoginUserSerializer(user).data, status=status.HTTP_202_ACCEPTED)
 
-
-#Logout 
 class LogoutView(views.APIView):
-    
+
+    @swagger_auto_schema(tags=['authentication'])
     def post(self, request):
         logout(request)
         return Response(None, status=status.HTTP_200_OK)
         
+response_change_password = {
+    "200": openapi.Response(
+        description='Change Password User Sucess',
+        examples={
+            "application/json": {
+                "message": "change password successfull",
+            }
+        },
+    ),
+    "400": openapi.Response(
+        description='Change Password User Sucess',
+        examples={
+            "application/json": {
+                "old_password": [
+                    "This field may not be blank."
+                ],
+                "new_password1": [
+                    "This field may not be blank."
+                ],
+                "new_password2": [
+                    "This field may not be blank."
+                ]
+            }
+        },
+    ),
+}
+
+class ChangePasswordView(views.APIView):
+    serializer_class = ChangePasswordSerializer
+
+    @swagger_auto_schema(tags=['authentication'], request_body=serializer_class, responses=response_change_password)
+    def put(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data = request.data)
+        serializer.is_valid(raise_exception = True)
+        user = serializer.save()
+        return Response({'message':'change password successfull'}, status=status.HTTP_200_OK)

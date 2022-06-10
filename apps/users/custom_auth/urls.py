@@ -1,28 +1,13 @@
-from django.urls import path
+from django.urls import path, include, re_path
 
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
-from apps.users.custom_auth.api.views import LoginView, LogoutView
-
-
-class ExampleView(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def get (self, request, *args, **kwargs):
-        
-        content = {
-            'user': str(request.user),
-            'auth': str(request.auth),
-        }
-        return Response(content)
-
+from apps.users.custom_auth.api.views import LoginView, LogoutView, ChangePasswordView
+from .api.routers import DefaultRouter as userRouter
 
 urlpatterns = [
-    path('login/', LoginView.as_view(), name="login"),
-    path('logout/', LogoutView.as_view(), name="logout"),
-    path('test/', ExampleView.as_view(), name='tets')
+    path('login/', LoginView.as_view(), name="authentication_login"),
+    path('logout/', LogoutView.as_view(), name="authentication_logout"),
+    path('change_password/', ChangePasswordView.as_view(), name="authentication_change_password"),
+    re_path(r'^password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     ]
 
 

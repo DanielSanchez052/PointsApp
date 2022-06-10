@@ -1,5 +1,5 @@
-from xml.dom import ValidationErr
-from django.contrib.auth import authenticate, user_login_failed
+from django.contrib.auth import authenticate, password_validation
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
@@ -9,12 +9,13 @@ from apps.users.custom_auth.api.authentication import default_user_authenticatio
 
 class PasswordField(serializers.CharField):
     def __init__(self, *args, **kwargs):
+        kwargs['required'] = kwargs.get('required', True)
+        kwargs['min_length'] = 8
         kwargs.setdefault("style", {})
-
         kwargs["style"]["input_type"] = "password"
         kwargs["write_only"] = True
         kwargs["trim_whitespace"] = False
-        kwargs['label'] = 'Password'
+        kwargs['label'] = kwargs.get('label','Password') 
 
         super().__init__(*args, **kwargs)
 
@@ -40,8 +41,6 @@ class LoginSerializer(serializers.Serializer):
         if not default_user_authentication_rule(user):
             raise serializers.ValidationError('User is disabled or not exists', code='authorization')
         return {'user': user}
-    
-
 
 class LoginUserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True, many=True)
@@ -53,3 +52,29 @@ class LoginUserSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['status'] = {"status": instance.status, "name": instance.get_status_display()}
         return data
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = PasswordField(label='old_password')
+    new_password1 = PasswordField(label='new_password1')
+    new_password2 = PasswordField(label='new_password2')
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError(
+                _('Your old password was entered incorrectly. Please enter it again.')
+            )
+        return value
+
+    def validate(self, data):
+        if data['new_password1'] != data['new_password2']:
+            raise serializers.ValidationError({'new_password2': _("The two password fields didn't match.")})
+        password_validation.validate_password(data['new_password1'], self.context['request'].user)
+        return data
+
+    def save(self, **kwargs):
+        password = self.validated_data['new_password1']
+        user = self.context['request'].user
+        user.set_password(password)
+        user.save()
+        return user

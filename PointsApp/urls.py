@@ -23,6 +23,8 @@ from drf_yasg import openapi
 
 import debug_toolbar
 
+from apps.users.custom_auth.api.routers import router as userRouter 
+
 # Documentation Swagger
 schema_view = get_schema_view(
     openapi.Info(
@@ -38,10 +40,17 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    ##debug
     path('__debug__/', include(debug_toolbar.urls)),
+    
+    ##docs
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('admin/', admin.site.urls),
-    path('auth/', include('apps.users.custom_auth.urls'))
+    
+    ##internal modules
+    path('auth/', include('apps.users.custom_auth.urls')),
+    path('user/', include('apps.users.user.urls')),
+    
 ]

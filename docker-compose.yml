@@ -20,13 +20,40 @@ services:
     
   celery:
     build: .
-    command: celery -A PointsApp worker --loglevel=info
+    command: watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A PointsApp worker --loglevel=info   
     volumes:
       - .:/code
+    environment:
+      - DEBUG=1
     networks:
       - web_network
     depends_on:
       - web 
+      - redis
+
+  celery-beat:
+    build: .
+    command: watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A PointsApp beat -l info
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+    networks:
+      - web_network
+    depends_on:
+      - web 
+      - redis
+      
+  celery-flower:  
+    build: .
+    restart: always
+    command: watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A PointsApp flower --loglevel=DEBUG --port=8888
+    ports:  
+      - 8888:8888
+    networks:
+      - web_network
+    depends_on:
+      - web   
       - redis
     
   nginx:

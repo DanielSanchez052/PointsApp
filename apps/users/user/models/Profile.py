@@ -19,7 +19,6 @@ class Profile(BaseModel):
     last_name = models.CharField('last name',max_length=150, blank=True)
     phone = models.CharField('phone number', max_length=50)
     phone2 = models.CharField('phone extra', max_length=50, blank=True, null=True)
-    email = models.CharField('email', max_length=250, unique=True, blank=True)
     address = models.CharField('address', max_length=250, blank=True)
     postal_code = models.CharField(max_length=50, blank=True)
 
