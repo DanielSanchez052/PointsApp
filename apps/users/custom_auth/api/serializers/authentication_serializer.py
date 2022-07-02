@@ -3,8 +3,6 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from apps.users.custom_auth.models import Auth
-from apps.users.user.api.serializers.profile_serializers import ProfileSerializer
 from apps.users.custom_auth.api.authentication import default_user_authentication_rule
 
 class PasswordField(serializers.CharField):
@@ -42,16 +40,6 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('User is disabled or not exists', code='authorization')
         return {'user': user}
 
-class LoginUserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(read_only=True, many=True)
-    class Meta:
-        model = Auth
-        fields = ('username', 'profile', 'status',)
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['status'] = {"status": instance.status, "name": instance.get_status_display()}
-        return data
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = PasswordField(label='old_password')

@@ -2,13 +2,15 @@ from django.contrib.auth import login, logout
 from django.conf import settings
 
 from rest_framework.response import Response
-from rest_framework import status, views, permissions, generics
-from rest_framework.generics import UpdateAPIView
+from rest_framework import status, views, permissions
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .serializers.authentication_serializer import LoginSerializer, LoginUserSerializer, ChangePasswordSerializer
+from .serializers.authentication_serializer import LoginSerializer, ChangePasswordSerializer
+from .serializers.general_serializer import UserProfileSerializer
+from apps.users.user.api.serializers.profile_serializers import ProfileSerializer  
+
 from .authentication import CsrfExemptSessionAuthentication
 from apps.core.utils import get_request_ip
 from ..models import IpLocked
@@ -34,7 +36,7 @@ class LoginView(views.APIView):
             user.save()
 
         login(request, user)
-        return Response(LoginUserSerializer(user).data, status=status.HTTP_202_ACCEPTED)
+        return Response(UserProfileSerializer(user).data, status=status.HTTP_202_ACCEPTED)
 
 class LogoutView(views.APIView):
 

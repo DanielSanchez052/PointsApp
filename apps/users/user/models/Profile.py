@@ -10,7 +10,7 @@ from .IdentificationType import IdentificationType
 
 class Profile(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False )
-    auth = models.ForeignKey(Auth, on_delete=models.CASCADE, related_name='profile')
+    auth = models.OneToOneField(Auth, on_delete=models.CASCADE, related_name='profile')
     city = models.ForeignKey(City, on_delete=models.DO_NOTHING)
     identification_type = models.ForeignKey(IdentificationType, on_delete=models.SET_DEFAULT, default=1)
     status = models.ForeignKey(ProfileStatus, on_delete=models.SET_DEFAULT, default=1)

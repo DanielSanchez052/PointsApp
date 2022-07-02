@@ -7,12 +7,11 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.sessions.models import Session
 
-from simple_history.models import HistoricalRecords
-
 class UserManager(BaseUserManager):
-    def _create_user(self, username, password, is_staff, is_superuser, **extra_fields):
+    def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
         user = self.model(
             username = username,
+            email = email,
             is_staff = is_staff,
             is_superuser = is_superuser,
             **extra_fields
@@ -21,11 +20,11 @@ class UserManager(BaseUserManager):
         user.save(using=self.db)
         return user
 
-    def create_user(self, username, password=None, **extra_fields):
-        return self._create_user(username, password, False, False, **extra_fields)
+    def create_user(self, username, email, password=None, **extra_fields):
+        return self._create_user(username, email, password, False, False, **extra_fields)
 
-    def create_superuser(self, username, password=None, **extra_fields):
-        return self._create_user(username, password, True, True, **extra_fields)
+    def create_superuser(self, username, email,password=None, **extra_fields):
+        return self._create_user(username, email, password, True, True, **extra_fields)
 
 class Auth(AbstractBaseUser, PermissionsMixin):
     """
@@ -50,7 +49,6 @@ class Auth(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateField('created at',auto_now_add=True,auto_now=False)
     modified_at = models.DateField('modified at',auto_now_add=False ,auto_now=True)
     attempts = models.SmallIntegerField('attempts to block', default=0)
-    historical = HistoricalRecords()
     objects = UserManager()
 
     class Meta:
