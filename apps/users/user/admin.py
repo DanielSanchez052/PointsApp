@@ -12,4 +12,5 @@ admin.site.register(ProfileStatus)
 
 class ProfileInline(admin.StackedInline):
     model = Profile
+    min_num = 0
     max_num = 1

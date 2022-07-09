@@ -9,7 +9,6 @@ from drf_yasg import openapi
 
 from .serializers.authentication_serializer import LoginSerializer, ChangePasswordSerializer
 from .serializers.general_serializer import UserProfileSerializer
-from apps.users.user.api.serializers.profile_serializers import ProfileSerializer  
 
 from .authentication import CsrfExemptSessionAuthentication
 from apps.core.utils import get_request_ip

@@ -14,12 +14,13 @@ from .tasks import valid_user_login
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
-    #print(type(kwargs.get('user').id))
     valid_user_login.delay(kwargs.get('user').id, request.session.session_key)
 
 @receiver(user_login_failed)
-def on_login_fail(sender, request,**kwags):
-    username = request.data['username']
+def on_login_fail(sender, request, credentials, **kwags):
+    # username = request.data['username']
+    print(credentials)
+    username = credentials['username'] 
     request_ip = get_request_ip(request)
 
     try:

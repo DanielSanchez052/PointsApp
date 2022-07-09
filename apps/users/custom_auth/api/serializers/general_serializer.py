@@ -1,5 +1,4 @@
-
-from rest_framework import serializers
+from rest_framework import serializers 
 
 from apps.users.user.api.serializers.profile_serializers import ProfileSerializer
 from apps.users.custom_auth.models import Auth

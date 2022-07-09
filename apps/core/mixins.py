@@ -1,5 +1,5 @@
-
 class SerializerActionMixin(object):
+
     serializer_action_classes = {}
 
     def get_serializer_class(self):
@@ -23,3 +23,4 @@ class SerializerActionMixin(object):
             return self.serializer_action_classes[self.action]
         except (KeyError, AttributeError):
             return super().get_serializer_class()
+

@@ -40,7 +40,6 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('User is disabled or not exists', code='authorization')
         return {'user': user}
 
-
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = PasswordField(label='old_password')
     new_password1 = PasswordField(label='new_password1')

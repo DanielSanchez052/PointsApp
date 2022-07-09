@@ -40,7 +40,6 @@ LOCAL_APPS = [
     'apps.users.user',
     'apps.users.points',
     'apps.users.notifications',
-    'apps.users.serviceUser',
     'apps.products.customer',
     'apps.products.digital',
     'apps.products.order',

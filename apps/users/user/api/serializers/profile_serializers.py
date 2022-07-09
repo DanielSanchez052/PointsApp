@@ -9,7 +9,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model=Auth
-        fields=['username','email'] 
+        fields=['username','email','groups'] 
+        read_only_fields= ['groups']
         extra_kwargs = {
             'username': {'validators':[]},
             'email': {'validators':[]},
@@ -83,6 +84,7 @@ class ListUserProfileSerializer (serializers.ModelSerializer):
         auth = data.pop('auth')
         data['username'] = auth['username']
         data['email'] = auth['email']
+        data['roles'] = auth['groups']
         return data
 
 

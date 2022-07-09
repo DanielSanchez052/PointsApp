@@ -6,12 +6,19 @@ services:
       - web_network
   
   web:
+    image: web
     container_name: web
     restart: always
     env_file: .env
-    build: .
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000"]
     volumes:
       - .:/code
+    ports:
+      - 8000:8000
+      - 5678:5678
     networks:
       - web_network
     depends_on:
@@ -54,19 +61,7 @@ services:
     depends_on:
       - web   
       - redis
-    
-  nginx:
-    container_name: nginx
-    restart: always
-    image: "nginx:latest"
-    ports: 
-      - "85:85"
-    volumes: 
-      - ./nginx:/etc/nginx/conf.d 
-    networks: 
-      - web_network
-    depends_on: 
-      - web
+
 networks:
   web_network:
     driver: bridge

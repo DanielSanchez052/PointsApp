@@ -19,8 +19,6 @@ class CreateUserSerializer(serializers.ModelSerializer):
         model = Auth
         fields = ['username','email','password1','password2','profile']
 
-   
-
     def validate(self, data):
         if data['password1'] != data['password2']:
             raise serializers.ValidationError({'password2': _("The two password fields didn't match.")})
@@ -49,6 +47,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
                 email = validated_data['email'],
                 password = validated_data['password']
             )
+            user.groups.add(1)
             
             if 'profile' in validated_data:
                 self.create_profile(user, validated_data)
