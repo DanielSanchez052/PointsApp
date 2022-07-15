@@ -40,7 +40,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     ##internal modules
-    path('auth/', include('apps.users.custom_auth.urls')),
+    path('authentication/', include('apps.users.custom_auth.urls')),
     path('', include('apps.users.user.urls')),
 
     # ##viewsets

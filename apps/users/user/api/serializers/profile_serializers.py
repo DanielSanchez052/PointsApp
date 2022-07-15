@@ -1,9 +1,9 @@
-from email import message
+import json
 from rest_framework import serializers
 
 from apps.users.user.models import Profile
 from apps.users.custom_auth.models import Auth
-
+from apps.users.points.models import AccountTransaction
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     
@@ -43,6 +43,12 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         if check_query.exists():
             raise serializers.ValidationError('this name already exists.')
         return value
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data['groups'] = [ { 'id': g.get('id'), 'name': g.get('name') } for g in instance.groups.values('id','name')]
+        return data 
 
 class ProfileSerializer (serializers.ModelSerializer):
     class Meta:
@@ -85,6 +91,7 @@ class ListUserProfileSerializer (serializers.ModelSerializer):
         data['username'] = auth['username']
         data['email'] = auth['email']
         data['roles'] = auth['groups']
+        #data['available_points'] = points = AccountTransaction.objects.getPointsByUser(instance)
         return data
 
 

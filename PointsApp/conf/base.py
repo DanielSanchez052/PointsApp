@@ -132,13 +132,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
-
+        'apps.core.permissions.CustomModelPermissions',
     ),
     # 'DEFAULT_RENDERER_CLASSES': (
     #     'rest_framework.renderers.JSONRenderer',
     # ),
 }
-
 #CORS Config
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",

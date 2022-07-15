@@ -19,7 +19,7 @@ class LoginView(views.APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
     permission_classes = (permissions.AllowAny,)
 
-    @swagger_auto_schema(tags=['authentication'])
+    # @swagger_auto_schema(tags=['authentication'])
     def post(self, request, format=None):
         ip_request = get_request_ip(request)
 
@@ -39,7 +39,7 @@ class LoginView(views.APIView):
 
 class LogoutView(views.APIView):
 
-    @swagger_auto_schema(tags=['authentication'])
+    # @swagger_auto_schema(tags=['authentication'])
     def post(self, request):
         logout(request)
         return Response(None, status=status.HTTP_200_OK)
@@ -74,7 +74,7 @@ response_change_password = {
 class ChangePasswordView(views.APIView):
     serializer_class = ChangePasswordSerializer
 
-    @swagger_auto_schema(tags=['authentication'], request_body=serializer_class, responses=response_change_password)
+    # @swagger_auto_schema(tags=['authentication'], request_body=serializer_class, responses=response_change_password)
     def put(self, request, *args, **kwargs):
         serializer = self.serializer_class(data = request.data)
         serializer.is_valid(raise_exception = True)
