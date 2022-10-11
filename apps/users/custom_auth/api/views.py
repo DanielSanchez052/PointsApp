@@ -38,6 +38,7 @@ class LoginView(views.APIView):
         return Response(UserProfileSerializer(user).data, status=status.HTTP_202_ACCEPTED)
 
 class LogoutView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     # @swagger_auto_schema(tags=['authentication'])
     def post(self, request):
@@ -72,6 +73,7 @@ response_change_password = {
 }
 
 class ChangePasswordView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ChangePasswordSerializer
 
     # @swagger_auto_schema(tags=['authentication'], request_body=serializer_class, responses=response_change_password)

@@ -20,7 +20,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Documentación de API",
         default_version='v0.1',
-        description="Documentación pública de API de para matriculas y manejo de estudiantes, profesores y cursos",
+        description="Documentación de API para el manejo de usuarios y puntos",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="sanchezd0528@gmail.com"),
         license=openapi.License(name="BSD License"),
@@ -42,6 +42,7 @@ urlpatterns = [
     ##internal modules
     path('authentication/', include('apps.users.custom_auth.urls')),
     path('', include('apps.users.user.urls')),
+    path('account/', include('apps.users.points.urls')),
 
     # ##viewsets
     path('',include(profileRouter.urls))

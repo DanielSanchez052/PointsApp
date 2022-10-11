@@ -9,14 +9,11 @@ from .Account import Account
 from .TransactionStatus import TransactionStatus
 
 class PointManager(models.Manager):
-    def getPointsByUser(self, user):
-        try:
-            query_points = self.filter( models.Q(status_id = 1) & models.Q(account__user=user)).exclude(expirationDate__lte = datetime.now()).annotate(total_points = models.Sum('available_value'))
-            points = query_points.values_list('total_points',flat=True)[0] if query_points.count() > 0 else 0
-        except ObjectDoesNotExist as e:
-            points = 0
-        finally:
-            return points
+        
+    def AddPointsProfile(self, profile, value):
+        account = Account.objects.get(user = profile)
+        transaction = self.create(status_id = 1, account = account, value=value, available_value=value)
+        return transaction
 
 class AccountTransaction(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False )

@@ -1,12 +1,14 @@
 import json
 from rest_framework import serializers
+from apps.users.points.models.Account import Account
+from apps.users.user.api.serializers.general_serializers import RoleSerializer
 
 from apps.users.user.models import Profile
 from apps.users.custom_auth.models import Auth
 from apps.users.points.models import AccountTransaction
 
 class UpdateUserSerializer(serializers.ModelSerializer):
-    
+    groups = RoleSerializer(many = True)
     class Meta:
         model=Auth
         fields=['username','email','groups'] 
@@ -46,8 +48,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-
-        data['groups'] = [ { 'id': g.get('id'), 'name': g.get('name') } for g in instance.groups.values('id','name')]
+        #data['groups'] = list(Auth.objects.getGroupsByUser(instance))
         return data 
 
 class ProfileSerializer (serializers.ModelSerializer):
@@ -58,6 +59,11 @@ class ProfileSerializer (serializers.ModelSerializer):
     def validate(self, data):
         data['auth'] = self.context['request'].user
         return data 
+
+    def create(self, validated_data):
+        profile =  super().create(validated_data)
+        account = Account.objects.create(status_id = 1, user_id=profile.id)
+        return profile 
 
 class UpdateUserProfileSerializer (serializers.ModelSerializer):
     auth = UpdateUserSerializer(required=False)
@@ -78,8 +84,7 @@ class UpdateUserProfileSerializer (serializers.ModelSerializer):
         profile =  super().update(instance, validated_data)
         return profile
 
-
-class ListUserProfileSerializer (serializers.ModelSerializer):
+class ListUserProfileSerializer (serializers.ModelSerializer): 
     auth = UpdateUserSerializer(required=True)
     class Meta:
         model=Profile
@@ -91,9 +96,8 @@ class ListUserProfileSerializer (serializers.ModelSerializer):
         data['username'] = auth['username']
         data['email'] = auth['email']
         data['roles'] = auth['groups']
-        #data['available_points'] = points = AccountTransaction.objects.getPointsByUser(instance)
+        data['available_points'] = Account.objects.getPoints(instance)
         return data
-
 
 class UniqueNestedValdiator:
     message = 'This field must be unique.'

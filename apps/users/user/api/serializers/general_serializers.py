@@ -1,8 +1,6 @@
-from dataclasses import fields
 from django.contrib.auth.models import Group
 
 from rest_framework import serializers
-from apps.core import models 
 
 from apps.users.user.models import City, Department, Country, IdentificationType, ProfileStatus
 
@@ -10,7 +8,6 @@ class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id','name']
-
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:

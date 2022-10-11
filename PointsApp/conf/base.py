@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-from email.policy import default
 import os
 from pathlib import Path
 from decouple import config
@@ -60,7 +59,6 @@ INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",##Debug Tools Config
-
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', #WHITENOISE MIDDLEWARE
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -130,6 +128,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.DjangoModelPermissions',
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
         'apps.core.permissions.CustomModelPermissions',
