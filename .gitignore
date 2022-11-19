@@ -8,8 +8,11 @@
 __pycache__
 db.sqlite3
 media
+static/*
+media_root/*
 db_conection_production.json
 db_conection_dev.json
+db_conection_dev_user
 
 # Backup files # 
 *.bak 

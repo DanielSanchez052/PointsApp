@@ -30,10 +30,11 @@ class Products(BaseModel):
     image = models.URLField('product image', max_length=255, null=False, blank = False) 
     is_active = models.BooleanField(default=True)
 
-
     def __str__(self) -> str:
         return f"{self.name}|{self.category.description}"
 
     class Meta:
-        verbose_name='Product'
-        verbose_name_plural='Products'
+        verbose_name = 'Product'
+
+        verbose_name_plural = 'Products'
+        

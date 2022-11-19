@@ -18,8 +18,6 @@ def on_user_logged_in(sender, request, **kwargs):
 
 @receiver(user_login_failed)
 def on_login_fail(sender, request, credentials, **kwags):
-    # username = request.data['username']
-    print(credentials)
     username = credentials['username'] 
     request_ip = get_request_ip(request)
 

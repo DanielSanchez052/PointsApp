@@ -1,0 +1,11 @@
+{
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "dbPointsAppUsers",
+        "HOST": "host.docker.internal",
+        "PORT": "5432",
+        "USER": "admin",
+        "PASSWORD": "Admin123*",
+        "ATOMIC_REQUESTS": "True"
+    }
+}

@@ -42,12 +42,12 @@ class Auth(AbstractBaseUser, PermissionsMixin):
         (2,'COMPLETE'),
     )
     email = models.CharField('email', max_length=250, unique=True, blank=True)
-    username = models.CharField(max_length = 255, unique = True)
-    status = models.SmallIntegerField('status authentication',choices=CHOICE_STATUS, default=1)
-    is_active = models.BooleanField(default = True)
-    is_staff = models.BooleanField(default = False)
-    created_at = models.DateField('created at',auto_now_add=True,auto_now=False)
-    modified_at = models.DateField('modified at',auto_now_add=False ,auto_now=True)
+    username = models.CharField(max_length=255, unique = True)
+    status = models.SmallIntegerField('status authentication', choices=CHOICE_STATUS, default=1)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    created_at = models.DateField('created at', auto_now_add=True, auto_now=False)
+    modified_at = models.DateField('modified at', auto_now_add=False, auto_now=True)
     attempts = models.SmallIntegerField('attempts to block', default=0)
     objects = UserManager()
 
@@ -112,7 +112,7 @@ class IpLockedManager(models.Manager):
 
 class IpLocked(models.Model):
     """
-    store locked IPs¨
+    store locked IPs
       * id
       * ip
       * created_at 

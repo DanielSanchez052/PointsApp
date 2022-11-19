@@ -16,7 +16,7 @@ class ProfileUserViewset(SerializerActionMixin,viewsets.ModelViewSet):
         'create':ProfileSerializer
     }
 
-    queryset=serializer_class.Meta.model.objects.filter(Q(auth__is_active=1) & Q(status=1)).select_related()
+    queryset = serializer_class.Meta.model.objects.filter(Q(auth__is_active=1) & Q(status=1)).prefetch_related('auth')
 
     def list(self, request, *args, **kwargs):
         if(not request.user.groups.filter(name__in=['Admin','Super Admin']).exists()):

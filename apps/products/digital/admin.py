@@ -1,7 +1,9 @@
 from django.contrib import admin
 from apps.products.digital.models import CodeStatus, Expiration, ProductCode
+from apps.products.admin import productAdmin
+
 
 # Register your models here.
-admin.site.register(CodeStatus)
-admin.site.register(Expiration)
-admin.site.register(ProductCode)
+productAdmin.register(CodeStatus)
+productAdmin.register(Expiration)
+productAdmin.register(ProductCode)

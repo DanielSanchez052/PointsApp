@@ -1,7 +1,8 @@
 from django.contrib import admin
 from apps.products.order.models import Order, OrderItem, OrderStatus
+from apps.products.admin import productAdmin
 
 # Register your models here.
-admin.site.register(Order)
-admin.site.register(OrderItem)
-admin.site.register(OrderStatus)
+productAdmin.register(Order)
+productAdmin.register(OrderItem)
+productAdmin.register(OrderStatus)

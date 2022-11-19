@@ -1,12 +1,14 @@
+from email.policy import default
 import uuid
 from datetime import datetime, timedelta
 
 from django.db import models 
-from django.core.exceptions import ObjectDoesNotExist
 
 from apps.core.models import BaseModel
 from .Account import Account
 from .TransactionStatus import TransactionStatus
+from .TransactionSource import TransactionSource
+from .TransactionType import TransactionType
 
 class PointManager(models.Manager):
         
@@ -22,6 +24,8 @@ class AccountTransaction(BaseModel):
     value = models.PositiveIntegerField(blank=True, null=True)
     available_value = models.PositiveIntegerField(blank=True, null=True)
     expirationDate = models.DateField('Expire at', blank=True, null=True, default=(datetime.now()+timedelta(days=365)))
+    transaction_source = models.ForeignKey(TransactionSource, on_delete=models.CASCADE, default=1)
+    transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE, default=1)
     objects = PointManager()
 
     def __str__(self) -> str:

@@ -9,12 +9,14 @@ class AccountManager(models.Manager):
     def getPoints(self, profile):
         points = self.prefetch_related('accounttransaction_set')\
             .filter(
-                models.Q(accounttransaction__status_id = 1) &
+                models.Q(accounttransaction__status_id = 1) & # Transaccion activa
+                models.Q(accounttransaction__transaction_source_id=1) & #transaccion de acumulacion
                 models.Q(user = profile)
             ).exclude(
                     accounttransaction__expirationDate__lte = datetime.now()) \
             .annotate(total = models.Sum('accounttransaction__available_value'))\
             .values('total')
+            
         return points[0]['total'] if len(points) > 0 else 0
 
 

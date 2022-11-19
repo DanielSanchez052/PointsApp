@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.sessions.models import Session
 
-
 from celery import shared_task
 from celery.utils.log import get_task_logger
 

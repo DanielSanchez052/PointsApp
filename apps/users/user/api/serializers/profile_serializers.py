@@ -1,4 +1,5 @@
 import json
+from re import U
 from rest_framework import serializers
 from apps.users.points.models.Account import Account
 from apps.users.user.api.serializers.general_serializers import RoleSerializer
@@ -46,10 +47,6 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('this name already exists.')
         return value
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        #data['groups'] = list(Auth.objects.getGroupsByUser(instance))
-        return data 
 
 class ProfileSerializer (serializers.ModelSerializer):
     class Meta:
@@ -85,19 +82,27 @@ class UpdateUserProfileSerializer (serializers.ModelSerializer):
         return profile
 
 class ListUserProfileSerializer (serializers.ModelSerializer): 
-    auth = UpdateUserSerializer(required=True)
-    class Meta:
-        model=Profile
-        fields = ['id','auth','city','identification_type', 'status', 'identification' ,'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code']
+    username = serializers.SerializerMethodField('getUsername')
+    email = serializers.SerializerMethodField('getEmail')
+    available_points = serializers.SerializerMethodField('getAvailablePoints')
+    groups = serializers.SerializerMethodField('getGroups')
+    
+    def getUsername(self, instance):
+        return instance.auth.username
         
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        auth = data.pop('auth')
-        data['username'] = auth['username']
-        data['email'] = auth['email']
-        data['roles'] = auth['groups']
-        data['available_points'] = Account.objects.getPoints(instance)
-        return data
+    def getEmail(self, instance):
+        return instance.auth.email
+
+    def getAvailablePoints(self, instance):
+        return Account.objects.getPoints(instance)
+
+    def getGroups(self, instance):
+        return instance.auth.groups.values()
+    
+    class Meta:
+        model = Profile
+        fields = ['id', 'username', 'email', 'groups', 'city', 'identification_type', 'status', 'identification', 'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code','available_points']
+
 
 class UniqueNestedValdiator:
     message = 'This field must be unique.'

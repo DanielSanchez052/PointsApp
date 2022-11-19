@@ -1,5 +1,4 @@
 
-
 def get_request_ip(request):
     """
         Get IP from request user 

@@ -10,4 +10,4 @@ urlpatterns = [
     path('user/country/', GetCounties.as_view(), name='user_countries'),
     path('user/identification_type/', GetIdentificationTypes.as_view(), name='user_identification_types'),
     path('profile/profile_status/', GetProfileStatus.as_view(), name='user_profile_status'),
- ] 
+ ]
