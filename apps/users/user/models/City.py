@@ -1,5 +1,6 @@
 from django.db import models
-from .Department import Department 
+from .Department import Department
+
 
 class City(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -8,8 +9,8 @@ class City(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self) -> str:
-        return f'{self.name}|{self.postal_code}|{self.is_active}'
+        return f'{self.pk}'
 
     class Meta:
-        verbose_name='User City'
-        verbose_name_plural='User Cities'
+        verbose_name = 'User City'
+        verbose_name_plural = 'User Cities'

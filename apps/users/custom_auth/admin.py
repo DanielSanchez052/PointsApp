@@ -2,11 +2,14 @@ from django.contrib import admin
 from django.contrib.auth.models import Permission
 from django.contrib.sessions.models import Session
 
+from import_export.admin import ImportExportModelAdmin
+
 from apps.users.user.admin import ProfileInline
 from apps.users.custom_auth.models import Auth, IpLocked, UserSession
 
 
-class AuthAdmin(admin.ModelAdmin):
+@admin.register(Auth)
+class AuthAdmin(ImportExportModelAdmin):
     model = Auth
     search_fields = ['email', 'username']
     list_display = ('email', 'username', 'status',
@@ -24,4 +27,3 @@ admin.site.register(Permission)
 admin.site.register(Session)
 admin.site.register(IpLocked)
 admin.site.register(UserSession)
-admin.site.register(Auth, AuthAdmin)

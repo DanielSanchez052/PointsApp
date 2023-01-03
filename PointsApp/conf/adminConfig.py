@@ -52,10 +52,11 @@ JAZZMIN_SETTINGS = {
         #     "new_window": True},
 
         # model admin to link to (Permissions checked against model)
-        # {"model": "auth.User"},
+        # {"model": "user.LoadUsers"},
 
         # App with dropdown menu to all its models pages (Permissions checked against models)
-        # {"app": "books"},
+        {"app": "user"},
+        {"app": "custom_auth"},
     ],
 
     #############

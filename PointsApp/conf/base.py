@@ -153,11 +153,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, config('MEDIA_ROOT', default='media_root'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 # User Auth Model
 AUTH_USER_MODEL = 'custom_auth.Auth'
 #LOGIN_REDIRECT_URL = '/'
@@ -185,10 +180,24 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 
 # Jazzmin Config
-JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+# JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
 
 # Import Export
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 IMPORT_EXPORT_CELERY_INIT_MODULE = "PointsApp.celery"
 
 IMPORT_EXPORT_CELERY_MODELS = IMPORT_EXPORT_CELERY_MODELS
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}

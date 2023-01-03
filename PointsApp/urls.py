@@ -45,7 +45,7 @@ urlpatterns = [
          cache_timeout=0), name='schema-redoc'),
 
     # admin sites
-    path('users_admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name="admin"),
 
     # internal modules
     path('authentication/', include('apps.users.custom_auth.urls')),

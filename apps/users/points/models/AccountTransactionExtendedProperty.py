@@ -8,7 +8,7 @@ class AccountTransactionExtendedProperty(BaseModel):
     value = models.CharField(max_length=255, )
     key = models.CharField(max_length=50)
     account_transaction = models.ForeignKey(
-        AccountTransaction, on_delete=models.DO_NOTHING)
+        AccountTransaction, related_name='extended_properties', on_delete=models.DO_NOTHING)
 
     def __str__(self) -> str:
         return f'{self.key}|{self.value}'

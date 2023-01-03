@@ -8,26 +8,28 @@ from apps.users.user.models import Profile
 from apps.users.custom_auth.models import Auth
 from apps.users.points.models import AccountTransaction
 
+
 class UpdateUserSerializer(serializers.ModelSerializer):
-    groups = RoleSerializer(many = True)
+    groups = RoleSerializer(many=True)
+
     class Meta:
-        model=Auth
-        fields=['username','email','groups'] 
-        read_only_fields= ['groups']
+        model = Auth
+        fields = ['username', 'email', 'groups']
+        read_only_fields = ['groups']
         extra_kwargs = {
-            'username': {'validators':[]},
-            'email': {'validators':[]},
+            'username': {'validators': []},
+            'email': {'validators': []},
         }
 
     def validate_username(self, value):
         check_query = self.Meta.model.objects.filter(username=value)
 
         if self.instance:
-            check_query.exclude(pk = self.instance.pk)
+            check_query.exclude(pk=self.instance.pk)
 
         if self.parent is not None and self.parent.instance is not None:
             auth = getattr(self.parent.instance, self.field_name)
-            check_query = check_query.exclude(pk=auth.pk) 
+            check_query = check_query.exclude(pk=auth.pk)
 
         if check_query.exists():
             raise serializers.ValidationError('this name already exists.')
@@ -37,11 +39,11 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         check_query = self.Meta.model.objects.filter(email=value)
 
         if self.instance:
-            check_query.exclude(pk = self.instance.pk)
+            check_query.exclude(pk=self.instance.pk)
 
         if self.parent is not None and self.parent.instance is not None:
             auth = getattr(self.parent.instance, self.field_name)
-            check_query = check_query.exclude(pk=auth.pk) 
+            check_query = check_query.exclude(pk=auth.pk)
 
         if check_query.exists():
             raise serializers.ValidationError('this name already exists.')
@@ -50,46 +52,50 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer (serializers.ModelSerializer):
     class Meta:
-        model=Profile
-        fields = ['city','identification_type', 'status', 'identification' ,'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code']
-        
+        model = Profile
+        fields = ['city', 'identification_type', 'status', 'identification',
+                  'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code']
+
     def validate(self, data):
         data['auth'] = self.context['request'].user
-        return data 
+        return data
 
     def create(self, validated_data):
-        profile =  super().create(validated_data)
-        account = Account.objects.create(status_id = 1, user_id=profile.id)
-        return profile 
+        profile = super().create(validated_data)
+        account = Account.objects.create(status_id=1, user_id=profile.id)
+        return profile
+
 
 class UpdateUserProfileSerializer (serializers.ModelSerializer):
     auth = UpdateUserSerializer(required=False)
 
     class Meta:
-        model=Profile
-        fields = ['auth','city','identification_type', 'status', 'identification' ,'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code']
+        model = Profile
+        fields = ['auth', 'city', 'identification_type', 'status', 'identification',
+                  'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code']
         read_only_fields = ('identification',)
 
     def update(self, instance, validated_data):
-        ##Update Auth model
+        # Update Auth model
         if 'auth' in validated_data:
             auth_data = validated_data.pop('auth')
             auth_instance = instance.auth
             auth = UpdateUserSerializer().update(auth_instance, auth_data)
 
-        ##Update Profile
-        profile =  super().update(instance, validated_data)
+        # Update Profile
+        profile = super().update(instance, validated_data)
         return profile
 
-class ListUserProfileSerializer (serializers.ModelSerializer): 
+
+class ListUserProfileSerializer (serializers.ModelSerializer):
     username = serializers.SerializerMethodField('getUsername')
     email = serializers.SerializerMethodField('getEmail')
     available_points = serializers.SerializerMethodField('getAvailablePoints')
     groups = serializers.SerializerMethodField('getGroups')
-    
+
     def getUsername(self, instance):
         return instance.auth.username
-        
+
     def getEmail(self, instance):
         return instance.auth.email
 
@@ -98,18 +104,8 @@ class ListUserProfileSerializer (serializers.ModelSerializer):
 
     def getGroups(self, instance):
         return instance.auth.groups.values()
-    
+
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'email', 'groups', 'city', 'identification_type', 'status', 'identification', 'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code','available_points']
-
-
-class UniqueNestedValdiator:
-    message = 'This field must be unique.'
-    requires_context = True
-    
-    def __init__(self, base, queryset):
-        self.queryset = queryset
-        self.base = base
-
-    
+        fields = ['id', 'username', 'email', 'groups', 'city', 'identification_type', 'status',
+                  'identification', 'name', 'last_name', 'phone', 'phone2', 'address', 'postal_code', 'available_points']

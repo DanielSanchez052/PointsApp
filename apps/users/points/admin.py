@@ -14,10 +14,25 @@ class AccountTransactionInLine(admin.StackedInline):
 
 # Register your models here.
 admin.site.register(AccountStatus)
-admin.site.register(TransactionStatus)
-admin.site.register(TransactionSource)
-admin.site.register(TransactionType)
 admin.site.register(AccountTransactionExtendedProperty)
+
+
+@admin.register(TransactionType)
+class AccountTransactionTypeAdmin(admin.ModelAdmin):
+    model = TransactionType
+    list_display = ['id', 'name']
+
+
+@admin.register(TransactionStatus)
+class AccountTransactionStatusAdmin(admin.ModelAdmin):
+    model = TransactionStatus
+    list_display = ['id', 'name']
+
+
+@admin.register(TransactionSource)
+class AccountTransactionSourceAdmin(admin.ModelAdmin):
+    model = TransactionSource
+    list_display = ['id', 'name']
 
 
 @admin.register(AccountTransaction)
