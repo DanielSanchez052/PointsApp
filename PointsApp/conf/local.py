@@ -1,5 +1,5 @@
 from PointsApp.conf.base import *
-from PointsApp.utils import read_json
+from apps.core.utils import read_json
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)

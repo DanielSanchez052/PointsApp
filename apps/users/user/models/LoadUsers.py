@@ -1,15 +1,18 @@
 import uuid
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 
 
 from apps.core.validators import UniqueInValidator
 from apps.users.custom_auth.models import Auth
 from apps.users.user.models.Profile import Profile
+from apps.users.notifications.models import Notification
 
 
 class LoadUsersManager(models.Manager):
     def create_profiles(self, auth_list, queryset=None, update_status=False):
+        batch_size = 1000
         if queryset is None:
             self.filter(status=4)
 
@@ -44,9 +47,10 @@ class LoadUsersManager(models.Manager):
             queryset.update(status=3)
 
         # create all profiles
-        return Profile.objects.bulk_create(profile_list)
+        return Profile.objects.bulk_create(profile_list, batch_size=batch_size)
 
     def create_users(self, queryset=None, update_status=False):
+        batch_size = 1000
         if queryset is None:
             self.filter(
                 pk__in=models.Subquery(
@@ -72,7 +76,11 @@ class LoadUsersManager(models.Manager):
                 print(e)
         if update_status:
             queryset.update(status=3)
-        return Auth.objects.bulk_create(auth_list, batch_size=1000)
+
+        users_created = Auth.objects.bulk_create(
+            auth_list, batch_size=batch_size)
+
+        return users_created, auth_list
 
 
 class LoadUsers(models.Model):

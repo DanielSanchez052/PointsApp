@@ -17,6 +17,7 @@ class PointManager(models.Manager):
         account = Account.objects.get(user=profile)
         transaction = self.create(
             status_id=1, account=account, value=value, available_value=value)
+
         return transaction
 
 

@@ -1,6 +1,7 @@
 amqp==5.1.1
 asgiref==3.5.1
 async-timeout==4.0.2
+attrs==22.2.0
 autopep8==2.0.0
 billiard==3.6.4.0
 celery==5.2.6
@@ -29,7 +30,6 @@ django-rest-passwordreset==1.2.1
 django-simple-history==3.0.0
 django-timezone-field==5.0
 djangorestframework==3.13.1
-djangorestframework-simplejwt==5.1.0
 drf-yasg==1.20.0
 et-xmlfile==1.1.0
 flower==1.0.0
@@ -40,6 +40,7 @@ idna==3.3
 inflection==0.5.1
 itypes==1.2.0
 Jinja2==3.1.2
+jsonschema==4.17.3
 kombu==5.2.4
 MarkupPy==1.14
 MarkupSafe==2.1.1
@@ -53,6 +54,7 @@ pycodestyle==2.9.1
 pycparser==2.21
 PyJWT==2.3.0
 pyparsing==3.0.8
+pyrsistent==0.19.3
 python-crontab==2.6.0
 python-dateutil==2.8.2
 python-decouple==3.6

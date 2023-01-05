@@ -1,5 +1,5 @@
 from django.conf import settings
-from PointsApp.utils import extract_apps
+from apps.core.utils import extract_apps
 
 
 class ProductRouter:
